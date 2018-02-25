@@ -1,4 +1,4 @@
-from adafruit import SevenSegment
+from Adafruit_LED_Backpack import SevenSegment
 
 class Display:
   def __init__(self):

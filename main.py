@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from TimeKeeper import TimeKeeper
 from Display import Display
 import threading
