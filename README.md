@@ -17,4 +17,13 @@ Original project ideas from [this hackster project](https://www.hackster.io/xelf
 ```
 export TM_SPOTIFY_PLAYLIST="Alarm Clock"
 ```
-4. Run main.py in this project.
+4. Add a Firebase service account JSON credential file under `credentials/firebase.json`
+5. Set a Firebase DB URL to use to grab alarm data.
+```
+export TM_FIREBASE_DB_URL="https://database_name.firebase.io"
+```
+6. Set a Firebase user ID to use to grab the alarm data.
+```
+export TM_USER_ID="jfkdlsfjdklfjdskl"
+```
+7. Run main.py in this project.
