@@ -12,6 +12,9 @@ time_keeper = TimeKeeper()
 # Add any listeners
 time_keeper.on_tick(on_second)
 
+alarm_manager = AlarmManager()
+time_keeper.on_tick(alarm_manager.check_new_time)
+
 display = Display()
 time_keeper.on_tick(display.set_new_time)
 
