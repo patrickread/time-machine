@@ -18,6 +18,6 @@ user_id = os.environ['TM_USER_ID']
 alarms = list(ref.get()[user_id].values())
 
 # Write out to file
-file_handler = open("data/alarms.json", "w")
+file_handler = open("data/alarms.json", "w+")
 file_handler.write(json.dumps(alarms))
 file_handler.close()
