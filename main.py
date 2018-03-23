@@ -15,14 +15,15 @@ class TimeMachine:
     self.display = Display()
 
   def second_ticked(self, hour, minute, second):
-    print "{:02}:{:02}:{:02} - Alarm Status {}".format(hour, minute, second, self.alarm_status)
+    if self.alarm_status != "normal":
+    	print "{:02}:{:02}:{:02} - Alarm Status {}".format(hour, minute, second, self.alarm_status)
 
   def button_pressed(self):
     if self.alarm_status == "normal":
       print "Button pressed."
       self.display.print_button_pressed()
     else:
-      self.alarm_status = "Normal"
+      self.alarm_status = "normal"
       self.stop_music()
       print "Alarm turned off."
 

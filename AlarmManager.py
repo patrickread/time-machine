@@ -30,6 +30,9 @@ class AlarmManager:
       ref = db.reference('/alarms')
       alarms = list(ref.get()[user_id].values())
 
+      for alarm in alarms:
+	print("Alarm loaded: " + json.dumps(alarm))
+
       # Write out to file
       file_handler = open("data/alarms.json", "w+")
       file_handler.write(json.dumps(alarms))
