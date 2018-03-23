@@ -17,23 +17,25 @@ class AlarmManager:
   def on_alarm_fired(self, subscriber):
     self.subscribers.append(subscriber)
 
+  # Fetch alarms every 60 seconds. Run on its own thread.
   def cache_alarms_to_file(self):
-    cred = credentials.Certificate("credentials/firebase.json")
-    default_app = firebase_admin.initialize_app(cred, {
-      'databaseURL': os.environ['TM_FIREBASE_DB_URL']
-    })
+    while True:
+      cred = credentials.Certificate("credentials/firebase.json")
+      default_app = firebase_admin.initialize_app(cred, {
+        'databaseURL': os.environ['TM_FIREBASE_DB_URL']
+      })
 
-    # Read alarms from Firebase DB
-    ref = db.reference('/alarms')
-    user_id = os.environ['TM_USER_ID']
-    alarms = list(ref.get()[user_id].values())
+      # Read alarms from Firebase DB
+      ref = db.reference('/alarms')
+      user_id = os.environ['TM_USER_ID']
+      alarms = list(ref.get()[user_id].values())
 
-    # Write out to file
-    file_handler = open("data/alarms.json", "w+")
-    file_handler.write(json.dumps(alarms))
-    file_handler.close()
+      # Write out to file
+      file_handler = open("data/alarms.json", "w+")
+      file_handler.write(json.dumps(alarms))
+      file_handler.close()
 
-    sleep(60)
+      sleep(60)
 
 
   def get_alarm_from_file(self):
