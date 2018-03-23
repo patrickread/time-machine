@@ -6,23 +6,28 @@ from AlarmManager import AlarmManager
 from ButtonManager import ButtonManager
 import threading
 import subprocess
+import datetime
 
 alarm_manager = AlarmManager()
 alarm_status = "normal"
+alarm_last_fire = datetime.datetime(1970,1,1,0,0,0)
 
 def second_ticked(hour, minute, second):
-  print "{:02}:{:02}:{:02} - Alarm Status %s".format(hour, minute, second, alarm_status)
+  print "{:02}:{:02}:{:02} - Alarm Status {}".format(hour, minute, second, alarm_status)
 
 def button_pressed():
-  if alarm_manager.status == "normal":
+  if alarm_status == "normal":
     print "Button pressed."
   else:
     alarm_status = "Normal"
     print "Alarm turned off."
 
 def alarm_fired(alarm):
-  subprocess.run("shell/play_music.sh", shell=True)
-  alarm_status = "alarm_fired"
+  print "Alarm fired!"
+  if alarm_last_fire is None or alarm_last_fire <= datetime.timedelta(minutes = -1):
+    alarm_last_fire = datetime.datetime.now()
+    subprocess.call("shell/play_music.sh", shell=True)
+    alarm_status = "alarm_fired"
 
 time_keeper = TimeKeeper()
 button_manager = ButtonManager()
@@ -44,3 +49,4 @@ time_thread.start()
 
 button_thread = threading.Thread(target=button_manager.watch)
 button_thread.start()
+
