@@ -26,10 +26,10 @@ class TimeMachine:
 
   def alarm_fired(self, alarm):
     print "Alarm fired!"
-    if self.alarm_last_fire is None or self.alarm_last_fire <= datetime.timedelta(minutes = -1):
+    if self.alarm_last_fire is None or self.alarm_last_fire <= datetime.datetime.now() + datetime.timedelta(minutes = -1):
       self.alarm_last_fire = datetime.datetime.now()
       self.alarm_status = "alarm_fired"
-      self.music_thread = threading.Thread(target=start_music)
+      self.music_thread = threading.Thread(target=self.start_music)
       self.music_thread.start()
 
   def start_music(self):
@@ -45,13 +45,13 @@ class TimeMachine:
     display = Display()
 
     # Add any listeners
-    time_keeper.on_tick(second_ticked)
+    time_keeper.on_tick(self.second_ticked)
     time_keeper.on_tick(alarm_manager.check_new_time)
     time_keeper.on_tick(display.set_new_time)
 
-    button_manager.on_button_press(button_pressed)
+    button_manager.on_button_press(self.button_pressed)
 
-    alarm_manager.on_alarm_fired(alarm_fired)
+    alarm_manager.on_alarm_fired(self.alarm_fired)
 
     # Start processes
 
