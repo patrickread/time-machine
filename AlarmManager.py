@@ -37,7 +37,7 @@ class AlarmManager:
 
 
   def get_alarm_from_file(self):
-    file_handler = open("/home/pi/time-machine/data/alarms.json", "r")
+    file_handler = open("data/alarms.json", "r")
     alarms = file_handler.read()
     file_handler.close()
     return json.loads(alarms)
