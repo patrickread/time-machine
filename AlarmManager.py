@@ -1,6 +1,5 @@
 import json
 from datetime import datetime
-import subprocess
 
 # For triggering the alarm to go off, depending on whether any of the locally
 # stored alarms match the given hour, minute, and second and the current day of
@@ -8,6 +7,10 @@ import subprocess
 class AlarmManager:
   def __init__(self):
     self.status = "normal"
+    self.subscribers = []
+
+  def on_alarm_fired(self, subscriber):
+    self.subscribers.append(subscriber)
 
   def get_alarms(self):
     file_handler = open("data/alarms.json", "r")
@@ -18,7 +21,8 @@ class AlarmManager:
   def check_new_time(self, hour, minute, second):
     for alarm in self.get_alarms():
       if self.check_time_match(alarm['time'], hour, minute, second) and self.check_day_match(self.get_days(alarm['days'])):
-        subprocess.run("shell/play_music.sh", shell=True)
+        for subscriber in self.subscribers:
+          subscriber(alarm)
         return True
       else:
         next
