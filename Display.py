@@ -5,7 +5,7 @@ class Display:
     self.segment = SevenSegment.SevenSegment(address=0x70)
     self.segment.begin()
     self.mode = None
-    self.segment.set_brightness(7)
+    self.segment.set_brightness(12)
 
   def print_button_pressed(self):
     self.segment.clear()

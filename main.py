@@ -62,5 +62,8 @@ class TimeMachine:
     button_thread = threading.Thread(target=button_manager.watch)
     button_thread.start()
 
+    alarm_caching_thread = threading.Thread(target=alarm_manager.cache_alarms_to_file)
+    alarm_caching_thread.start()
+
 time_machine = TimeMachine()
 time_machine.run()

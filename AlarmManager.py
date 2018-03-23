@@ -1,5 +1,10 @@
 import json
 from datetime import datetime
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
+import os
+from time import sleep
 
 # For triggering the alarm to go off, depending on whether any of the locally
 # stored alarms match the given hour, minute, and second and the current day of
@@ -12,14 +17,33 @@ class AlarmManager:
   def on_alarm_fired(self, subscriber):
     self.subscribers.append(subscriber)
 
-  def get_alarms(self):
-    file_handler = open("data/alarms.json", "r")
+  def cache_alarms_to_file(self):
+    cred = credentials.Certificate("credentials/firebase.json")
+    default_app = firebase_admin.initialize_app(cred, {
+      'databaseURL': os.environ['TM_FIREBASE_DB_URL']
+    })
+
+    # Read alarms from Firebase DB
+    ref = db.reference('/alarms')
+    user_id = os.environ['TM_USER_ID']
+    alarms = list(ref.get()[user_id].values())
+
+    # Write out to file
+    file_handler = open("data/alarms.json", "w+")
+    file_handler.write(json.dumps(alarms))
+    file_handler.close()
+
+    sleep(60)
+
+
+  def get_alarm_from_file(self):
+    file_handler = open("/home/pi/time-machine/data/alarms.json", "r")
     alarms = file_handler.read()
     file_handler.close()
     return json.loads(alarms)
 
   def check_new_time(self, hour, minute, second):
-    for alarm in self.get_alarms():
+    for alarm in self.get_alarm_from_file():
       if self.check_time_match(alarm['time'], hour, minute, second) and self.check_day_match(self.get_days(alarm['days'])):
         for subscriber in self.subscribers:
           subscriber(alarm)
