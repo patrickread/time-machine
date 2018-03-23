@@ -7,7 +7,7 @@ import subprocess
 # the week.
 class AlarmManager:
   def __init__(self):
-    pass
+    self.status = "normal"
 
   def get_alarms(self):
     file_handler = open("data/alarms.json", "r")
