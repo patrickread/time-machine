@@ -4,6 +4,13 @@ class Display:
   def __init__(self):
     self.segment = SevenSegment.SevenSegment(address=0x70)
     self.segment.begin()
+    self.mode = None
+    self.segment.set_brightness(7)
+
+  def print_button_pressed(self):
+    self.segment.clear()
+    self.segment.print_number_str("1111")
+    self.segment.write_display()
 
   def set_new_time(self, hour, minute, second):
     self.segment.clear()
