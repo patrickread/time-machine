@@ -64,7 +64,7 @@ class TimeMachine:
     # Add any listeners
     self.time_keeper.on_tick(self.second_ticked)
     self.time_keeper.on_tick(self.alarm_manager.check_new_time)
-    self.time_keeper.fire_minute_event(self.display.set_new_time)
+    self.time_keeper.on_minute_tick(self.display.set_new_time)
 
     button_manager.on_button_press(self.button_pressed)
 
