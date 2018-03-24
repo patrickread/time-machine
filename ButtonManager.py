@@ -7,6 +7,7 @@ class ButtonManager:
 
   def __init__(self, logger):
     self.subscribers = []
+    self.button_pressed = False
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(self.ACTIVE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
@@ -17,9 +18,12 @@ class ButtonManager:
   def watch(self):
     try:
         while True:
-                if GPIO.input(self.ACTIVE_PIN):
-                  for subscriber in self.subscribers:
-                    subscriber()
-                  sleep(0.1)
+          if GPIO.input(self.ACTIVE_PIN) and !self.button_pressed:
+            self.button_pressed = True
+            for subscriber in self.subscribers:
+              subscriber()
+            sleep(0.1)
+          else:
+            self.button_pressed = False
     finally:
             GPIO.cleanup()
