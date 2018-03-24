@@ -4,17 +4,18 @@ from TimeKeeper import TimeKeeper
 from Display import Display
 from AlarmManager import AlarmManager
 from ButtonManager import ButtonManager
-from systemd.journal import JournalHandler
+from SystemdHandler import SystemdHandler
 import logging
+import sys
 import threading
 import subprocess
 import datetime
 
 class TimeMachine:
   def __init__(self):
-    self.logger = logging.getLogger('Time Machine')
-    self.logger.addHandler(JournalHandler())
+    self.logger = logging.getLogger()
     self.logger.setLevel(logging.INFO)
+    self.logger.addHandler(SystemdHandler())
     self.logger.info("Starting up. Alarm status is normal.")
 
     self.alarm_status = "normal"
