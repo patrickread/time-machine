@@ -41,6 +41,11 @@ class AlarmManager:
 
       sleep(60)
 
+  def get_next_alarm(self):
+    # TODO figure out next alarm to execute
+    first_alarm = self.get_alarm_from_file()[0]
+    alarm_time = first_alarm['time']
+    datetime.strptime(alarm_time, '%I:%M %p')
 
   def get_alarm_from_file(self):
     file_handler = open("data/alarms.json", "r")
@@ -49,7 +54,7 @@ class AlarmManager:
     try:
       return json.loads(alarms)
     except ValueError as e:
-      self.logger.error("Error parsing JSON: " + e)
+      self.logger.error("Error parsing JSON: " + str(e))
       self.logger.error("Alarms read from file: " + alarms)
       return []
 
