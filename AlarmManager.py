@@ -29,17 +29,21 @@ class AlarmManager:
     while True:
       # Read alarms from Firebase DB
       ref = db.reference('/alarms')
-      alarms = list(ref.get()[user_id].values())
+      try:
+        alarms = list(ref.get()[user_id].values())
 
-      for alarm in alarms:
-	      self.logger.info("Alarm loaded: " + json.dumps(alarm))
+        for alarm in alarms:
+          self.logger.info("Alarm loaded: " + json.dumps(alarm))
 
-      # Write out to file
-      file_handler = open("data/alarms.json", "w+")
-      file_handler.write(json.dumps(alarms))
-      file_handler.close()
+        # Write out to file
+        file_handler = open("data/alarms.json", "w+")
+        file_handler.write(json.dumps(alarms))
+        file_handler.close()
 
-      sleep(60)
+        sleep(60)
+      except db.ApiCallError as e:
+        self.logger.error("Error requesting alarms from Firebase: " + str(e))
+        sleep(10)
 
   def get_next_alarm(self):
     # TODO figure out next alarm to execute
