@@ -5,12 +5,16 @@ class TimeKeeper:
 
   def __init__(self, logger):
     self.subscribers = []
+    self.minute_subscribers = []
     self.hour = -1
     self.minute = -1
     self.second = -1
 
   def on_tick(self, subscriber):
     self.subscribers.append(subscriber)
+
+  def on_minute_tick(self, subscriber):
+    self.minute_subscribers.append(subscriber)
 
   def check_for_event(self, hour, minute, second):
     if hour != self.hour or minute != self.minute or second != self.second:
@@ -19,8 +23,15 @@ class TimeKeeper:
       self.second = second
       self.fire_event(hour, minute, second)
 
+    if hour != self.hour or minute != self.minute:
+      self.fire_minute_event(hour, minute, second)
+
   def fire_event(self, hour, minute, second):
     for subscriber in self.subscribers:
+      subscriber(hour, minute, second)
+
+  def fire_minute_event(self, hour, minute, second):
+    for subscriber in self.minute_subscribers:
       subscriber(hour, minute, second)
 
   def run_time(self):
