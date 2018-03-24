@@ -29,6 +29,10 @@ class TimeMachine:
     if self.alarm_status != "normal":
     	self.logger.info("{:02}:{:02}:{:02} - Alarm Status {}".format(hour, minute, second, self.alarm_status))
 
+  def minute_ticked(self, hour, minute, second):
+    self.display.set_new_time(hour, minute, second)
+    self.display.set_appropriate_brightness(hour)
+
   def button_pressed(self):
     if self.alarm_status == "normal":
       self.logger.info("Button pressed during normal status.")
@@ -45,8 +49,8 @@ class TimeMachine:
       self.logger.info("Alarm turned off.")
 
   def alarm_fired(self, alarm):
-    self.logger.info("Alarm fired!")
     if self.alarm_last_fire is None or self.alarm_last_fire <= datetime.datetime.now() + datetime.timedelta(minutes = -1):
+      self.logger.info("Alarm fired!")
       self.alarm_last_fire = datetime.datetime.now()
       self.alarm_status = "alarm_fired"
       self.music_thread = threading.Thread(target=self.start_music)
@@ -64,7 +68,7 @@ class TimeMachine:
     # Add any listeners
     self.time_keeper.on_tick(self.second_ticked)
     self.time_keeper.on_tick(self.alarm_manager.check_new_time)
-    self.time_keeper.on_minute_tick(self.display.set_new_time)
+    self.time_keeper.on_minute_tick(self.minute_ticked)
 
     button_manager.on_button_press(self.button_pressed)
 
