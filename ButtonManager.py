@@ -18,7 +18,7 @@ class ButtonManager:
   def watch(self):
     try:
         while True:
-          if GPIO.input(self.ACTIVE_PIN) and !self.button_pressed:
+          if GPIO.input(self.ACTIVE_PIN) and not self.button_pressed:
             self.button_pressed = True
             for subscriber in self.subscribers:
               subscriber()

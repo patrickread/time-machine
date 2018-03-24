@@ -33,10 +33,11 @@ class TimeMachine:
     if self.alarm_status == "normal":
       self.logger.info("Button pressed during normal status.")
       next_alarm = self.alarm_manager.get_next_alarm()
-      self.display.set_new_time(next_alarm.hour, next_alarm.minute, next_alarm.second)
-      sleep(5)
-      # reset back to normal
-      self.display.set_new_time(self.time_keeper.hour, self.time_keeper.minute, self.time_keeper.second)
+      if type(next_alarm) is not None
+        self.display.set_new_time(next_alarm.hour, next_alarm.minute, next_alarm.second)
+        sleep(5)
+        # reset back to normal
+        self.display.set_new_time(self.time_keeper.hour, self.time_keeper.minute, self.time_keeper.second)
     else:
       self.logger.info("Button pressed while alarm is sounding.")
       self.alarm_status = "normal"

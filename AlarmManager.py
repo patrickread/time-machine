@@ -45,7 +45,7 @@ class AlarmManager:
     # TODO figure out next alarm to execute
     first_alarm = self.get_alarm_from_file()[0]
     alarm_time = first_alarm['time']
-    datetime.strptime(alarm_time, '%I:%M %p')
+    return datetime.strptime(alarm_time, '%I:%M %p')
 
   def get_alarm_from_file(self):
     file_handler = open("data/alarms.json", "r")
