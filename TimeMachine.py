@@ -4,31 +4,39 @@ from TimeKeeper import TimeKeeper
 from Display import Display
 from AlarmManager import AlarmManager
 from ButtonManager import ButtonManager
+from systemd.journal import JournalHandler
+import logging
 import threading
 import subprocess
 import datetime
 
 class TimeMachine:
   def __init__(self):
+    self.logger = logging.getLogger('Time Machine')
+    self.logger.addHandler(JournalHandler())
+    self.logger.setLevel(logging.INFO)
+    self.logger.info("Starting up. Alarm status is normal.")
+
     self.alarm_status = "normal"
     self.alarm_last_fire = datetime.datetime(1970,1,1,0,0,0)
-    self.display = Display()
+    self.display = Display(self.logger)
 
   def second_ticked(self, hour, minute, second):
     if self.alarm_status != "normal":
-    	print "{:02}:{:02}:{:02} - Alarm Status {}".format(hour, minute, second, self.alarm_status)
+    	self.logger.info("{:02}:{:02}:{:02} - Alarm Status {}".format(hour, minute, second, self.alarm_status))
 
   def button_pressed(self):
     if self.alarm_status == "normal":
-      print "Button pressed."
+      self.logger.info("Button pressed during normal status.")
       self.display.print_button_pressed()
     else:
+      self.logger.info("Button pressed while alarm is sounding.")
       self.alarm_status = "normal"
       self.stop_music()
-      print "Alarm turned off."
+      self.logger.info("Alarm turned off.")
 
   def alarm_fired(self, alarm):
-    print "Alarm fired!"
+    self.logger.info("Alarm fired!")
     if self.alarm_last_fire is None or self.alarm_last_fire <= datetime.datetime.now() + datetime.timedelta(minutes = -1):
       self.alarm_last_fire = datetime.datetime.now()
       self.alarm_status = "alarm_fired"
@@ -42,9 +50,9 @@ class TimeMachine:
     subprocess.call("shell/stop_music.sh", shell=True)
 
   def run(self):
-    alarm_manager = AlarmManager()
-    time_keeper = TimeKeeper()
-    button_manager = ButtonManager()
+    alarm_manager = AlarmManager(self.logger)
+    time_keeper = TimeKeeper(self.logger)
+    button_manager = ButtonManager(self.logger)
 
     # Add any listeners
     time_keeper.on_tick(self.second_ticked)

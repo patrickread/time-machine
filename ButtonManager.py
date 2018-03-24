@@ -5,7 +5,7 @@ from time import sleep
 class ButtonManager:
   ACTIVE_PIN = 25
 
-  def __init__(self):
+  def __init__(self, logger):
     self.subscribers = []
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(self.ACTIVE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)

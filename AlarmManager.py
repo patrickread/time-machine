@@ -10,7 +10,8 @@ from time import sleep
 # stored alarms match the given hour, minute, and second and the current day of
 # the week.
 class AlarmManager:
-  def __init__(self):
+  def __init__(self, logger):
+    self.logger = logger
     self.status = "normal"
     self.subscribers = []
 
@@ -31,7 +32,7 @@ class AlarmManager:
       alarms = list(ref.get()[user_id].values())
 
       for alarm in alarms:
-	print("Alarm loaded: " + json.dumps(alarm))
+	      self.logger.info("Alarm loaded: " + json.dumps(alarm))
 
       # Write out to file
       file_handler = open("data/alarms.json", "w+")
@@ -45,7 +46,12 @@ class AlarmManager:
     file_handler = open("data/alarms.json", "r")
     alarms = file_handler.read()
     file_handler.close()
-    return json.loads(alarms)
+    try:
+      return json.loads(alarms)
+    except ValueError as e:
+      self.logger.error("Error parsing JSON: " + e)
+      self.logger.error("Alarms read from file: " + alarms)
+      return []
 
   def check_new_time(self, hour, minute, second):
     for alarm in self.get_alarm_from_file():

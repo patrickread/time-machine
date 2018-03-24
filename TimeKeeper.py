@@ -3,7 +3,7 @@ import datetime
 
 class TimeKeeper:
 
-  def __init__(self):
+  def __init__(self, logger):
     self.subscribers = []
     self.hour = -1
     self.minute = -1

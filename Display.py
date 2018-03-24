@@ -1,7 +1,7 @@
 from Adafruit_LED_Backpack import SevenSegment
 
 class Display:
-  def __init__(self):
+  def __init__(self, logger):
     self.segment = SevenSegment.SevenSegment(address=0x70)
     self.segment.begin()
     self.mode = None
