@@ -17,14 +17,14 @@ class TimeKeeper:
     self.minute_subscribers.append(subscriber)
 
   def check_for_event(self, hour, minute, second):
+    if hour != self.hour or minute != self.minute:
+      self.fire_minute_event(hour, minute, second)
+
     if hour != self.hour or minute != self.minute or second != self.second:
       self.hour = hour
       self.minute = minute
       self.second = second
       self.fire_event(hour, minute, second)
-
-    if hour != self.hour or minute != self.minute:
-      self.fire_minute_event(hour, minute, second)
 
   def fire_event(self, hour, minute, second):
     for subscriber in self.subscribers:
