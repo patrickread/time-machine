@@ -48,6 +48,11 @@ class TimeMachine:
       self.stop_music()
       self.logger.info("Alarm turned off.")
 
+  def button_double_pressed(self):
+    self.logger.info("Button double tapped.")
+    # TODO do a real response
+    self.display.print_button_pressed()
+
   def alarm_fired(self, alarm):
     if self.alarm_last_fire is None or self.alarm_last_fire <= datetime.datetime.now() + datetime.timedelta(minutes = -1):
       self.logger.info("Alarm fired!")
