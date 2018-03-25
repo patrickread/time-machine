@@ -52,7 +52,7 @@ class TimeMachine:
 
   def button_double_pressed(self):
     self.logger.info("Button double tapped.")
-    current_temp = self.weather_manager.get_current_temp()
+    current_temp = self.weather_manager.get_temp_from_file()
     self.display.set_temp(current_temp)
     sleep(5)
     # reset back to normal
@@ -95,6 +95,9 @@ class TimeMachine:
 
     alarm_caching_thread = threading.Thread(target=self.alarm_manager.cache_alarms_to_file)
     alarm_caching_thread.start()
+
+    weather_caching_thread = threading.Thread(target=self.weather_manager.cache_weather_to_file)
+    weather_caching_thread.start()
 
 time_machine = TimeMachine()
 time_machine.run()
