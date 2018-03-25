@@ -10,7 +10,8 @@ class ButtonManager:
   def __init__(self, logger):
     self.single_tap_subscribers = []
     self.double_tap_subscribers = []
-    self.button_pressed = None
+    self.button_last_pressed = None
+    self.button_pressed = False
     self.logger = logger
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(self.ACTIVE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -25,20 +26,25 @@ class ButtonManager:
   def watch(self):
     try:
         while True:
-          if GPIO.input(self.ACTIVE_PIN) and self.button_pressed is None:
-            self.button_pressed = datetime.datetime.now()
-            for subscriber in self.single_tap_subscribers:
-              button_response_thread = threading.Thread(target=subscriber)
-              button_response_thread.start()
-            sleep(0.1)
-          elif GPIO.input(self.ACTIVE_PIN) and self.button_pressed is not None:
-            if self.button_pressed >= datetime.datetime.now() + datetime.timedelta(seconds = -2):
-              # double tapped
-              for subscriber in self.double_tap_subscribers:
-                button_response_thread = threading.Thread(target=subscriber)
-                button_response_thread.start()
-              sleep(0.1)
+          if GPIO.input(self.ACTIVE_PIN) and not self.button_pressed:
+            self.handle_button_press()
           else:
-            self.button_pressed = None
+            self.button_pressed = False
     finally:
             GPIO.cleanup()
+
+  def handle_button_press(self):
+    if self.button_last_pressed is not None and self.button_last_pressed >= datetime.datetime.now() + datetime.timedelta(seconds = -2):
+      # double tapped
+      for subscriber in self.double_tap_subscribers:
+        button_response_thread = threading.Thread(target=subscriber)
+        button_response_thread.start()
+    else:
+      self.button_pressed = True
+      self.button_last_pressed = datetime.datetime.now()
+      # single tapped
+      for subscriber in self.single_tap_subscribers:
+        button_response_thread = threading.Thread(target=subscriber)
+        button_response_thread.start()
+
+    sleep(0.1)
