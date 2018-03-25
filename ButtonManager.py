@@ -11,6 +11,7 @@ class ButtonManager:
     self.single_tap_subscribers = []
     self.double_tap_subscribers = []
     self.button_pressed = None
+    self.logger = logger
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(self.ACTIVE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 

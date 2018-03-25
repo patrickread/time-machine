@@ -76,6 +76,7 @@ class TimeMachine:
     self.time_keeper.on_minute_tick(self.minute_ticked)
 
     button_manager.on_button_press(self.button_pressed)
+    button_manager.on_button_double_press(self.button_double_pressed)
 
     self.alarm_manager.on_alarm_fired(self.alarm_fired)
 
