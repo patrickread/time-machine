@@ -35,10 +35,11 @@ class Display:
   # sets a fahrenheit temp to the display
   def set_temp(self, temperature_string):
     self.segment.clear()
-    first_digit = DIGIT_VALUES.get(str(temperature_string[0])).upper()
-    second_digit = DIGIT_VALUES.get(str(temperature_string[1])).upper()
-    self.segment.set_digit(0, first_digit)
-    self.segment.set_digit(1, second_digit)
+    self.segment.set_digit(0, str(temperature_string[0]))
+    self.segment.set_digit(1, str(temperature_string[1]))
+    if len(temperature_string) > 2:
+      self.segment.set_digit(2, str(temperature_string[2]))
+
     self.segment.set_digit(3, "F")
     self.segment.write_display()
 
