@@ -26,4 +26,10 @@ export TM_FIREBASE_DB_URL="https://database_name.firebase.io"
 ```
 export TM_USER_ID="jfkdlsfjdklfjdskl"
 ```
-7. Run main.py in this project.
+7. Get OpenWeatherMap API key, and set it in an environment variable. Also set your
+zip code.
+```
+export TM_OPEN_WEATHER_MAP_API_KEY="my key"
+export TM_WEATHER_ZIP_CODE="my zip"
+```
+8. Run TimeMachine.py in this project.

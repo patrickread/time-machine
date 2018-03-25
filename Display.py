@@ -1,5 +1,27 @@
 from Adafruit_LED_Backpack import SevenSegment
 
+# Digit value to bitmask mapping:
+DIGIT_VALUES = {
+    ' ': 0x00,
+    '-': 0x40,
+    '0': 0x3F,
+    '1': 0x06,
+    '2': 0x5B,
+    '3': 0x4F,
+    '4': 0x66,
+    '5': 0x6D,
+    '6': 0x7D,
+    '7': 0x07,
+    '8': 0x7F,
+    '9': 0x6F,
+    'A': 0x77,
+    'B': 0x7C,
+    'C': 0x39,
+    'D': 0x5E,
+    'E': 0x79,
+    'F': 0x71
+}
+
 class Display:
   LOW_BRIGHTNESS = 8
   HIGH_BRIGHTNESS = 15
@@ -10,9 +32,14 @@ class Display:
     self.logger = logger
     self.segment.set_brightness(self.HIGH_BRIGHTNESS)
 
-  def print_button_pressed(self):
+  # sets a fahrenheit temp to the display
+  def set_temp(self, temperature_string):
     self.segment.clear()
-    self.segment.print_number_str("1111")
+    first_digit = DIGIT_VALUES.get(str(temperature_string[0])).upper()
+    second_digit = DIGIT_VALUES.get(str(temperature_string[1])).upper()
+    self.segment.set_digit(0, first_digit)
+    self.segment.set_digit(1, second_digit)
+    self.segment.set_digit(3, "F")
     self.segment.write_display()
 
   def set_new_time(self, hour, minute, second):

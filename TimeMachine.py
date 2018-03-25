@@ -4,6 +4,7 @@ from TimeKeeper import TimeKeeper
 from Display import Display
 from AlarmManager import AlarmManager
 from ButtonManager import ButtonManager
+from WeatherManager import WeatherManager
 from SystemdHandler import SystemdHandler
 from time import sleep
 import logging
@@ -24,6 +25,7 @@ class TimeMachine:
     self.display = Display(self.logger)
     self.alarm_manager = AlarmManager(self.logger)
     self.time_keeper = TimeKeeper(self.logger)
+    self.weather_manager = WeatherManager(self.logger)
 
   def second_ticked(self, hour, minute, second):
     if self.alarm_status != "normal":
@@ -50,8 +52,8 @@ class TimeMachine:
 
   def button_double_pressed(self):
     self.logger.info("Button double tapped.")
-    # TODO do a real response
-    self.display.print_button_pressed()
+    current_temp = self.weather_manager.get_current_temp()
+    self.display.set_temp(current_temp)
     sleep(5)
     # reset back to normal
     self.display.set_new_time(self.time_keeper.hour, self.time_keeper.minute, self.time_keeper.second)
