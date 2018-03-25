@@ -52,6 +52,9 @@ class TimeMachine:
     self.logger.info("Button double tapped.")
     # TODO do a real response
     self.display.print_button_pressed()
+    sleep(5)
+    # reset back to normal
+    self.display.set_new_time(self.time_keeper.hour, self.time_keeper.minute, self.time_keeper.second)
 
   def alarm_fired(self, alarm):
     if self.alarm_last_fire is None or self.alarm_last_fire <= datetime.datetime.now() + datetime.timedelta(minutes = -1):

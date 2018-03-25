@@ -26,21 +26,22 @@ class ButtonManager:
   def watch(self):
     try:
         while True:
-          if GPIO.input(self.ACTIVE_PIN) and not self.button_pressed:
-            self.handle_button_press()
+          if GPIO.input(self.ACTIVE_PIN):
+            if not self.button_pressed:
+              self.handle_button_press()
           else:
             self.button_pressed = False
     finally:
             GPIO.cleanup()
 
   def handle_button_press(self):
+    self.button_pressed = True
     if self.button_last_pressed is not None and self.button_last_pressed >= datetime.datetime.now() + datetime.timedelta(seconds = -2):
       # double tapped
       for subscriber in self.double_tap_subscribers:
         button_response_thread = threading.Thread(target=subscriber)
         button_response_thread.start()
     else:
-      self.button_pressed = True
       self.button_last_pressed = datetime.datetime.now()
       # single tapped
       for subscriber in self.single_tap_subscribers:
