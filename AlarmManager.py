@@ -3,6 +3,7 @@ from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+from google.auth import exceptions
 import os
 from time import sleep
 
@@ -44,6 +45,11 @@ class AlarmManager:
       except db.ApiCallError as e:
         self.logger.error("Error requesting alarms from Firebase: " + str(e))
         sleep(10)
+      except exceptions.TransportError as e:
+        self.logger.error("Error requesting alarms from Firebase: " + str(e))
+        self.logger.error("Problem an internet connection issue.")
+        # delay for a minute and try again
+        sleep(60)
 
   def get_next_alarm(self):
     # TODO figure out next alarm to execute
