@@ -31,7 +31,7 @@ class WeatherManager:
   def get_temp_from_file(self):
     file_handler = open("data/weather.json", "r")
     current_weather = file_handler.read()
-    current_weather = json.load(current_weather)
+    current_weather = json.loads(current_weather)
     file_handler.close()
 
     temp = str(current_weather['main']['temp'])
