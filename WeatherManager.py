@@ -25,8 +25,12 @@ class WeatherManager:
   def get_current_weather(self):
     weather_url = "http://api.openweathermap.org/data/2.5/weather?zip={0},us&appid={1}&units=imperial".format(self.zip_code, self.api_key)
     self.logger.info("Weather URL: " + weather_url)
-    weather_json = json.loads(urllib2.urlopen(weather_url))
-    return json.dumps(weather_json)
+    try:
+      weather_json = json.load(urllib2.urlopen(weather_url))
+      return json.dumps(weather_json)
+    except urllib2.URLError as e:
+      self.logger.error("Error from weather API: " + str(e))
+      self.logger.error("Problem an internet connection issue.")
 
   def get_temp_from_file(self):
     file_handler = open("data/weather.json", "r")
